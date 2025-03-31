@@ -210,6 +210,7 @@ namespace chat_bot_prac
                 }
 
                 // If no response matches, ask the user to rephrase their question
+
                 if (!responseFound)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
