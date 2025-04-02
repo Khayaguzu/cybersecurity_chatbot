@@ -214,7 +214,7 @@ namespace chat_bot_prac
                 if (!responseFound)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    TypeText($"Chatbot-> {userName}, I didn’t quite understand that. Could you please ask questions related to Cybersecurity Awareness", 30);
+                    TypeText($"Chatbot-> {userName}, I did not quite understand that. Could you please ask questions related to Cybersecurity Awareness", 30);
                     Console.ResetColor();
                 }
             }
