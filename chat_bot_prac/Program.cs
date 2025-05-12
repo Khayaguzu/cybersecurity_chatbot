@@ -4,6 +4,7 @@ using System.IO;
 using System.Drawing;
 using System.Media;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace chat_bot_prac
 {
@@ -137,87 +138,151 @@ namespace chat_bot_prac
 
         static void StartChat(string userName)
         {
-            // Predefined chatbot responses in an array list with keyword-response pairs
-            ArrayList responses = new ArrayList
-            {
-                "how are you|I'm just a bot, {userName}, but I'm here to help you stay safe online!",
-                "purpose|My purpose is to educate you about cybersecurity and help you stay safe online.",
-                "password|A strong password should be at least 12 characters long, with a mix of letters, numbers, and symbols.",
-                "phishing|Be cautious of emails asking for personal information. Scammers often disguise themselves as trusted organizations.",
-                "safe browsing|Always check for 'https://' in the URL and avoid clicking on suspicious links.",
-                "vpn|A VPN encrypts your internet traffic, making it safer from hackers.",
-                "browsing|A browser is an application program that provides a way to look at and interact with all the information on the World Wide Web.",
-                "social engineering|Social engineering manipulates victims to control systems or steal personal and financial data.",
-                "software attacks|Software attacks include malware, phishing, and SQL injection, compromising systems and data.",
-                "computer security|Computer security is the protection of computer systems and networks from threats that lead to unauthorized access, theft, or damage.",
-                "malware|Malware is intrusive software created by cybercriminals to steal data and damage or destroy computer systems. Examples include viruses."
-            };
+            
+                List<string> questions = new List<string>();
+                List<ArrayList> answers = new List<ArrayList>();
 
-            // Inform the user on how to exit the chat
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            TypeText("Chatbot-> Type 'exit' to quit the chat.", 30);
-            Console.ResetColor();
+                void Store_Responses()
+                {
+                    questions.Add("how are you");
+                    answers.Add(new ArrayList {
+            "I'm just a bot, {userName}, but I'm here to help you stay safe online!",
+            "I'm functioning at optimal efficiency! How can I assist you today?"
+        });
 
-            while (true)
-            {
-                // Prompt the user for input with yellow text
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"{userName}:-> ");
+                    questions.Add("purpose");
+                    answers.Add(new ArrayList {
+            "My purpose is to educate you about cybersecurity and help you stay safe online.",
+            "I'm here to provide tips and answer questions related to online safety and security."
+        });
+
+                    questions.Add("password");
+                    answers.Add(new ArrayList {
+            "A strong password should be at least 12 characters long, with a mix of letters, numbers, and symbols.",
+            "Avoid using easily guessable passwords like '123456' or your name.",
+            "Use a password manager to generate and store complex passwords securely."
+        });
+
+                    questions.Add("phishing");
+                    answers.Add(new ArrayList {
+            "Be cautious of emails asking for personal information. Scammers often disguise themselves as trusted organizations.",
+            "Check the sender's email address and avoid clicking on suspicious links.",
+            "Phishing emails often create a sense of urgency to trick you into revealing personal data."
+        });
+
+                    questions.Add("safe browsing");
+                    answers.Add(new ArrayList {
+            "Always check for 'https://' in the URL and avoid clicking on suspicious links.",
+            "Keep your browser updated to protect against known vulnerabilities.",
+            "Use trusted antivirus and anti-malware extensions for safer browsing."
+        });
+
+                    questions.Add("vpn");
+                    answers.Add(new ArrayList {
+            "A VPN encrypts your internet traffic, making it safer from hackers.",
+            "VPNs help you maintain online privacy, especially on public Wi-Fi.",
+            "Choose a reputable VPN service that doesn’t log your data."
+        });
+
+                    questions.Add("browsing");
+                    answers.Add(new ArrayList {
+            "A browser is an application program that provides a way to look at and interact with all the information on the World Wide Web.",
+            "Popular browsers include Chrome, Firefox, Safari, and Edge.",
+            "Browsers can be enhanced with extensions to improve security and functionality."
+        });
+
+                    questions.Add("social engineering");
+                    answers.Add(new ArrayList {
+            "Social engineering manipulates victims to control systems or steal personal and financial data.",
+            "Be cautious of people asking for sensitive info over the phone or via email.",
+            "Attackers often impersonate authority figures to trick targets."
+        });
+
+                    questions.Add("software attacks");
+                    answers.Add(new ArrayList {
+            "Software attacks include malware, phishing, and SQL injection, compromising systems and data.",
+            "Ensure your software is updated to patch known vulnerabilities.",
+            "Firewalls and antivirus programs help detect and block software attacks."
+        });
+
+                    questions.Add("computer security");
+                    answers.Add(new ArrayList {
+            "Computer security is the protection of computer systems and networks from threats that lead to unauthorized access, theft, or damage.",
+            "Implementing strong authentication methods is part of good computer security.",
+            "Regular system updates and user awareness are key to computer security."
+        });
+
+                    questions.Add("malware");
+                    answers.Add(new ArrayList {
+            "Malware is intrusive software created by cybercriminals to steal data and damage or destroy computer systems. Examples include viruses.",
+            "Avoid downloading software from untrusted sources to reduce the risk of malware.",
+            "Use antivirus software to detect and remove malware threats."
+        });
+                }
+
+                Store_Responses();
+
+                // Inform the user on how to exit the chat
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                TypeText("Chatbot-> Type 'exit' to quit the chat.", 30);
                 Console.ResetColor();
 
-                // Get user input and normalize it
-                string userInput = Console.ReadLine()?.Trim().ToLower();
-
-                // Handle empty input
-                if (string.IsNullOrWhiteSpace(userInput))
+                while (true)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    TypeText($"{userName}, I didn’t quite understand that. Could you rephrase?", 30);
+                    // Prompt the user for input with yellow text
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"{userName}:-> ");
                     Console.ResetColor();
-                    continue;
-                }
 
-                // Exit condition for the chat
-                if (userInput == "exit")
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    TypeText($"Chatbot-> Goodbye, {userName}! Stay safe online!", 30);
-                    Console.ResetColor();
-                    break;
-                }
+                    // Get user input and normalize it
+                    string userInput = Console.ReadLine()?.Trim().ToLower();
 
-                bool responseFound = false;
-                foreach (string item in responses)
-                {
-                    // Split each response into keyword and message
-                    string[] parts = item.Split('|');
-                    if (parts.Length != 2) continue;
-
-                    string keyword = parts[0].Trim().ToLower();
-                    string answer = parts[1].Trim();
-
-                    // Check if the user's input contains any keyword from predefined responses
-                    if (userInput.Contains(keyword))
+                    // Handle empty input
+                    if (string.IsNullOrWhiteSpace(userInput))
                     {
-                        // Replace the placeholder {userName} with the actual username
-                        answer = answer.Replace("{userName}", userName);
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        TypeText($"Chatbot-> {answer}", 30);
+                        TypeText($"{userName}, I didn’t quite understand that. Could you rephrase?", 30);
                         Console.ResetColor();
-                        responseFound = true;
+                        continue;
+                    }
+
+                    // Exit condition for the chat
+                    if (userInput == "exit")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        TypeText($"Chatbot-> Goodbye, {userName}! Stay safe online!", 30);
+                        Console.ResetColor();
                         break;
                     }
-                }
 
-                // If no response matches, ask the user to rephrase their question
+                    bool responseFound = false;
 
-                if (!responseFound)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    TypeText($"Chatbot-> {userName}, I did not quite understand that. Could you please ask questions related to Cybersecurity Awareness", 30);
-                    Console.ResetColor();
+                    // Check if the user's input contains any of the predefined questions
+                    for (int i = 0; i < questions.Count; i++)
+                    {
+                        if (userInput.Contains(questions[i]))
+                        {
+                            ArrayList possibleAnswers = answers[i];
+                            Random rand = new Random();
+                            string response = possibleAnswers[rand.Next(possibleAnswers.Count)].ToString();
+                            response = response.Replace("{userName}", userName);
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            TypeText($"Chatbot-> {response}", 30);
+                            Console.ResetColor();
+                            responseFound = true;
+                            break;
+                        }
+                    }
+
+                    // If no response matches, ask the user to rephrase their question
+                    if (!responseFound)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        TypeText($"Chatbot-> {userName}, I did not quite understand that. Could you please ask questions related to Cybersecurity Awareness?", 30);
+                        Console.ResetColor();
+                    }
                 }
             }
         }
     }
-}
+
